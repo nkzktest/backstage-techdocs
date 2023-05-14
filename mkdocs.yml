@@ -1,0 +1,11 @@
+site_name: "Allowlist"
+site_description: "Example documentation for allowlist system"
+
+nav:
+  - Introduction: introduction.md
+  - Permissions: permissions.md
+  - SDK integration: sdk.md
+
+plugins:
+  - techdocs-core
+

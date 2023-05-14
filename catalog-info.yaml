@@ -1,0 +1,198 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: allowlist
+  title: Allowlist
+  # This is an extra long description
+  description: Example system - Allowlist - Open Policy Agent and REST based allowlist
+  annotations:
+    backstage.io/view-url: https://github.com/nkzktest/backstage-techdocs/blob/main/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+  tags: [opa, auth]
+  links:
+    - url: https://github.com/nkzktest/backstage-techdocs
+      title: Github Repo
+      icon: code
+spec:
+  owner: allowlist
+  domain: opa
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: allowlist
+  description: Example group of owners
+  title: Allowlist Team
+spec:
+  type: team
+  profile:
+    displayName: Allowlist
+    email: vh-termtest@ngn.no
+    picture: https://avatars.dicebear.com/api/identicon/allowlist.svg?background=%23fff&margin=25
+  parent: developer-infrastructure
+  children: []
+  members:
+    - vh-termtest
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: allowlist-worker
+  title: Allowlist Worker
+  # This is an extra long description
+  description: Example compoment - Allowlist worker, Responsible for synchronizing data into the allowlist data store
+  annotations:
+    backstage.io/view-url: https://github.com/nkzktest/backstage-techdocs/blob/main/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+  tags: [opa, auth]
+  links:
+    - url: https://github.com/nkzktest/backstage-techdocs
+      title: Github Repo
+      icon: code
+spec:
+  type: service
+  lifecycle: production
+  owner: allowlist
+  system: allowlist
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: allowlist-service
+  title: Allowlist Service
+  # This is an extra long description
+  description: Example service - Responsible for exposing data from the allowlist data store
+  annotations:
+    backstage.io/view-url: https://github.com/nkzktest/backstage-techdocs/blob/main/catalog-info.yaml
+  tags: [opa, auth]
+  links:
+    - url: https://github.com/nkzktest/backstage-techdocs
+      title: Github Repo
+      icon: code
+spec:
+  type: service
+  lifecycle: production
+  owner: allowlist
+  system: allowlist
+  providesApis:
+    - allowlist-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: allowlist-sdk
+  title: Allowlist SDK
+  # This is an extra long description
+  description: Provides allowlist .net integration
+  annotations:
+    backstage.io/view-url: https://github.com/nkzktest/backstage-techdocs/blob/main/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+  tags: [opa, auth, sdk]
+  links:
+    - url: https://github.com/nkzktest/backstage-techdocs
+      title: Github Repo
+      icon: code
+spec:
+  type: library
+  lifecycle: production
+  owner: allowlist
+  system: allowlist
+  consumesApis: [allowlist-api]
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: allowlist-api
+  title: Allowlist API
+  description: Example API - Provides REST and OPA bundle endpoints
+  tags: [rest, opa]
+  links:
+    - url: https://github.com/nkzktest/backstage-techdocs
+      title: Github Repo
+      icon: code
+    - url: https://allow-list-api-dev.apps.int.intility.no/swagger/v1/swagger.json
+      title: API Spec
+      icon: code
+spec:
+  type: openapi
+  lifecycle: production
+  owner: allowlist
+  system: allowlist
+  definition: |
+    {
+      "openapi": "3.0.1",
+      "info": {
+        "title": "CustomerAllowlistApi",
+        "version": "1.0"
+      },
+      "paths": {
+        "/api/v1/Bundles/allowlist": {
+          "get": {
+            "tags": [
+              "Bundles"
+            ],
+            "responses": {
+              "200": {
+                "description": "Success"
+              }
+            }
+          }
+        },
+        "/api/v1/Customers": {
+          "get": {
+            "tags": [
+              "Customers"
+            ],
+            "responses": {
+              "200": {
+                "description": "Success"
+              }
+            }
+          }
+        }
+      },
+      "components": {
+        "securitySchemes": {
+          "Azure AD": {
+            "type": "oauth2",
+            "flows": {
+              "clientCredentials": {
+                "authorizationUrl": "https://allow-list-api-dev.apps.int.intility.no/api/v1.0/9b5ff18e-53c0-45a2-8bc2-9c0c8f60b2c6/authorize",
+                "tokenUrl": "https://allow-list-api-dev.apps.int.intility.no/api/v1.0/9b5ff18e-53c0-45a2-8bc2-9c0c8f60b2c6/token",
+                "scopes": {
+                  "api://13ce8a7e-f220-4364-8e7e-9188bde798e4/.default": "Access Customer Allowlist"
+                }
+              }
+            }
+          }
+        }
+      },
+      "security": [
+        {
+          "Azure AD": [
+            "api://13ce8a7e-f220-4364-8e7e-9188bde798e4/Allowlist.Read"
+          ]
+        }
+      ]
+    }
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: allowlist-storage-account
+  title: Storage Account
+  description: Example resource - Azure Storage Account
+  annotations:
+    backstage.io/view-url: https://github.com/nkzktest/backstage-techdocs/blob/main/catalog-info.yaml
+  tags: [opa, auth]
+  links:
+    - url: https://github.com/nkzktest/backstage-techdocs
+      title: Github Repo
+      icon: code
+spec:
+  owner: allowlist
+  type: database
+  system: allowlist
+  dependencyOf:
+    - component:allowlist-service
+    - component:allowlist-worker
