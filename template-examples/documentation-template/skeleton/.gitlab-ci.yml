@@ -5,7 +5,7 @@ variables:
   ENTITY_NAMESPACE: 'default'
   ENTITY_KIND: 'Component'
   ENTITY_NAME: ${{ values.name }}
-  SOURCE_DIR: './backstage'
+  SOURCE_DIR: '.'
 
 include:
   - project: 'developer-infrastructure/backstage/intility-software-templates'
