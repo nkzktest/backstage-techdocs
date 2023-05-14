@@ -23,7 +23,7 @@ jobs:
       # ENTITY_NAMESPACE: 'default' # default is 'default'
       ENTITY_KIND: 'Component'
       ENTITY_NAME: ${{ values.name }}
-      SOURCE_DIR: './backstage' # default . Must be same as mkdocs.yml
+      SOURCE_DIR: '.' # default . Must be same as mkdocs.yml
       
       # In a Software template, Scaffolder will replace {{cookiecutter.component_id | jsonify}}
       # with the correct entity name. This is same as metadata.name in the entity's catalog-info.yaml
